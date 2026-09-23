@@ -92,7 +92,12 @@ def extract_tarball(blob: bytes, dest: Path) -> None:
     try:
         # Strip the leading "<repo>-<sha>/" component
         with tarfile.open(path, "r:gz") as tf:
-            tf.extractall(dest, filter="data")
+            try:
+                tf.extractall(dest, filter="data")
+            except TypeError:
+                # Python < 3.11 has no `filter` kwarg (PEP 706) — plain extract
+                # is fine here since the tarball comes from our own GitHub.
+                tf.extractall(dest)
         # Find the single top-level dir created by the tarball
         top = [p for p in dest.iterdir() if p.is_dir()]
         if len(top) == 1:

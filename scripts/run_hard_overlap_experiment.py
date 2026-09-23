@@ -28,7 +28,10 @@ except ImportError:
             f.write(data); tmp=f.name
         os.makedirs("/content/Finsheild", exist_ok=True)
         with tarfile.open(tmp, "r:gz") as tf:
-            tf.extractall("/content/Finsheild", filter="data")
+            try:
+                tf.extractall("/content/Finsheild", filter="data")
+            except TypeError:
+                tf.extractall("/content/Finsheild")
         # Flatten top-level dir
         import shutil
         top = [p for p in _pl.Path("/content/Finsheild").iterdir() if p.is_dir()]

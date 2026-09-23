@@ -36,8 +36,14 @@ def _rolling_window_counts(tx: pd.DataFrame,
     for w in windows_seconds:
         counts_sorted = np.zeros(len(df), dtype="int32")
         amounts_sorted = np.zeros(len(df), dtype="float64")
-        # ts dtype is datetime64[us], so w in seconds → w*1e6 microseconds
-        w_us = int(w) * 1_000_000
+        # ts is datetime64 (usually ns under pandas 2.x). Convert the window
+        # to the same integer units returned by .astype("int64").
+        try:
+            _unit = str(df[time_col].dtype.unit)  # 's', 'ms', 'us', 'ns'
+        except Exception:
+            _unit = "ns"
+        _scale = {"s": 1, "ms": 1_000, "us": 1_000_000, "ns": 1_000_000_000}.get(_unit, 1_000_000_000)
+        w_units = int(w) * _scale
         for gid, idx_block in df.groupby(group_col, sort=False).groups.items():
             block = df.loc[idx_block]
             ts = block[time_col].astype("int64").to_numpy()
@@ -45,7 +51,7 @@ def _rolling_window_counts(tx: pd.DataFrame,
             n = len(block)
             j = 0
             for i in range(n):
-                while j < i and (ts[i] - ts[j]) >= w_us:
+                while j < i and (ts[i] - ts[j]) >= w_units:
                     j += 1
                 if i == 0:
                     counts_sorted[block.index[i]] = 0
