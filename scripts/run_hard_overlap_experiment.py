@@ -21,7 +21,7 @@ except ImportError:
     else:
         # Direct tarball fallback
         import urllib.request, tarfile, tempfile
-        url = "https://github.com/riddhibantia/Finsheild/archive/refs/heads/main.tar.gz"
+        url = "https://github.com/riddhibantia/shieldfin/archive/refs/heads/main.tar.gz"
         print(f"Downloading {url}", file=sys.stderr)
         data = urllib.request.urlopen(url, timeout=120).read()
         with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as f:

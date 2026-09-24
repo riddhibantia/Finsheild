@@ -4,7 +4,7 @@
 
 ## Current state
 
-Repo: `https://github.com/riddhibantia/Finsheild` (public, MIT) — single repo.
+Repo: `https://github.com/riddhibantia/shieldfin` (public, MIT) — single repo.
 Branch: `main`. Layout: ML core (`src/finsheild/`) + app (`backend/` FastAPI, `frontend/` Next.js) + `models/` + `evaluation/`.
 
 ### What's done (215 passing: 208 ML core + 7 backend API)

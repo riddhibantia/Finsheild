@@ -384,7 +384,7 @@ Finsheild/                            # Single repo: ML Core + full-stack app
 ```
 
 ### Remote Deployments & Public Access Links
-- **GitHub (single repo, ML core + app)**: [https://github.com/riddhibantia/Finsheild](https://github.com/riddhibantia/Finsheild)
+- **GitHub (single repo, ML core + app)**: [https://github.com/riddhibantia/shieldfin](https://github.com/riddhibantia/shieldfin)
 - **Live Cashfree Webhook Ingress URL**: `<YOUR-CLOUDFLARE-URL>/api/webhooks/cashfree` (configure per deployment; do not commit live tunnel URLs)
 
 ---
