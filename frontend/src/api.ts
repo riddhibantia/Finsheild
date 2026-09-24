@@ -77,6 +77,53 @@ let clientStore: Rec[] = [
   },
 ];
 
+// Pre-seeded offline ledger: one of each demo shape (safe, spike, ring, gray-area, gateway).
+// clientScore unshifts, so these are added oldest-first to end newest-first.
+clientScore(
+  {
+    transaction_id: "TX-INIT-003",
+    user_id: "U-00007",
+    amount: 14500.0,
+    timestamp: new Date(Date.now() - 900000).toISOString(),
+    merchant: "Common Merchant M-7",
+    merchant_category: "retail",
+    device_id: "DEV-X-SHARED",
+    location: "Same city",
+    velocity: 5,
+  },
+  "fraud_ring",
+);
+clientScore(
+  {
+    transaction_id: "TX-INIT-004",
+    user_id: "U-00011",
+    amount: 9800.0,
+    timestamp: new Date(Date.now() - 600000).toISOString(),
+    merchant: "Online Marketplace",
+    merchant_category: "ecommerce",
+    device_id: "DEV-KNOWN-42",
+    location: "120km away",
+    velocity: 4,
+  },
+  "ambiguous",
+);
+clientScore(
+  {
+    transaction_id: "CF-CF_PAY_DEMO_1",
+    user_id: "riddhi@okhdfcbank",
+    amount: 75.0,
+    timestamp: new Date(Date.now() - 300000).toISOString(),
+    merchant: "Cashfree Payment Rail",
+    merchant_category: "digital_gateway",
+    device_id: "DEV-CF-GATEWAY",
+    location: "India (IN)",
+    velocity: 1,
+    channel: "UPI",
+    gateway: "Cashfree",
+  },
+  "normal",
+);
+
 function clientScore(txn: Record<string, any>, scenario = "normal"): Rec {
   const amt = Number(txn.amount) || 0;
   const vel = Number(txn.velocity) || 1;
@@ -207,18 +254,27 @@ async function req(path: string, init?: RequestInit) {
       return offlineIdentity(decodeURIComponent(path.split("/").pop() || "U-00001"));
     }
     if (path.startsWith("/api/graph/")) {
+      // Same shape as backend graph_for(): nodes + from/to edges + kind.
+      const txnId = decodeURIComponent(path.split("/").pop() || "TX-INIT-001");
+      const rec = clientStore.find((r) => r.transaction.transaction_id === txnId) || clientStore[0];
+      const txn = rec.transaction as Record<string, any>;
+      const shared = String(txn.device_id || "").includes("SHARED");
       return {
         nodes: [
-          { id: "usr_demo", label: "User (demo@okhdfc)", type: "user" },
-          { id: "acc_upi", label: "Account (acc_demo_upi)", type: "account" },
-          { id: "dev_phone", label: "Device (DEV-PHONE-DEMO)", type: "device" },
-          { id: "mer_chai", label: "Merchant (chaiwala@paytm)", type: "merchant" },
+          { id: `user:${txn.user_id}`, label: String(txn.user_id), type: "user", role: "Primary Account Holder", risk: shared ? "SUSPICIOUS" : "SAFE", details: { user_id: txn.user_id } },
+          { id: `dev:${txn.device_id}`, label: String(txn.device_id), type: "device", role: shared ? "Shared Hardware" : "Known Device", risk: shared ? "CRITICAL" : "SAFE", details: { fingerprint: "SHA256:7f9a…c09d", linked_accounts: shared ? 4 : 1 } },
+          { id: txnId, label: `₹${Number(txn.amount || 0).toLocaleString("en-IN")}`, type: "transaction", role: "Payment Under Review", risk: rec.score.risk_level, details: { transaction_id: txnId, amount: txn.amount, risk_score: rec.score.risk_score } },
+          { id: `merch:${txn.merchant}`, label: String(txn.merchant), type: "merchant", role: "Counterparty", risk: "INFO", details: { merchant_name: txn.merchant, category: txn.merchant_category } },
         ],
         edges: [
-          { source: "usr_demo", target: "acc_upi", label: "OWNS" },
-          { source: "acc_upi", target: "dev_phone", label: "USED_ON" },
-          { source: "acc_upi", target: "mer_chai", label: "TRANSFERS_TO" },
+          { from: `user:${txn.user_id}`, to: `dev:${txn.device_id}`, label: "USED_ON", is_suspicious: shared },
+          { from: `user:${txn.user_id}`, to: txnId, label: "FUNDS_DEBIT", is_suspicious: false },
+          { from: `dev:${txn.device_id}`, to: txnId, label: shared ? "SHARED_HARDWARE" : "DEVICE_SIGNATURE", is_suspicious: shared },
+          { from: txnId, to: `merch:${txn.merchant}`, label: "SETTLES_TO", is_suspicious: false },
         ],
+        kind: "DEMO_SIMULATION",
+        note: "Offline simulation graph — same shape as the live engine returns.",
+        summary: { topology_type: shared ? "Shared-Device Cluster" : "Single-Payer Chain", connected_entities: 4 },
       };
     }
     if (path.startsWith("/api/webhooks/cashfree")) {
@@ -262,7 +318,7 @@ async function req(path: string, init?: RequestInit) {
       return clientScore(body);
     }
     if (path === "/api/demo/reset") {
-      clientStore = clientStore.slice(0, 2);
+      clientStore = clientStore.slice(0, 5);
       return { ok: true };
     }
     return {};

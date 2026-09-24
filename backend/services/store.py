@@ -74,7 +74,7 @@ def get(txn_id: str) -> dict | None:
 
 
 def list_all(limit: int = 50) -> list[dict]:
-    return list(reversed(list(_store.values())))[-limit:]
+    return list(reversed(list(_store.values())))[:limit]
 
 
 def reset() -> None:

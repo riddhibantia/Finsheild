@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from .adapters.mock_adapter import MockMLAdapter
@@ -32,8 +32,11 @@ else:
 # Also expose mock for explicit fallback
 _mock = MockMLAdapter()
 
+_cors_raw = os.getenv("FINSHEILD_CORS_ORIGINS", "*")
+_cors_origins = ["*"] if _cors_raw.strip() == "*" else [o.strip() for o in _cors_raw.split(",") if o.strip()]
+
 app = FastAPI(title="Finsheild Demo API", version="0.1.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=_cors_origins, allow_methods=["*"], allow_headers=["*"])
 
 
 @app.get("/api/health")
@@ -177,7 +180,6 @@ def list_transactions(limit: int = 50):
 def get_transaction(txn_id: str):
     rec = store.get(txn_id)
     if not rec:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Not found")
     return rec
 
