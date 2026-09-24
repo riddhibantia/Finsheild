@@ -8,7 +8,8 @@
 ![Tests](https://img.shields.io/badge/tests-215%20passing-success)
 ![XGBoost ROC-AUC 0.97](https://img.shields.io/badge/XGBoost-ROC--AUC%200.97-orange)
 ![FastAPI](https://img.shields.io/badge/FastAPI-13%20endpoints-009688)
-![React](https://img.shields.io/badge/React-19%20%2B%20Vite-61DAFB)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB)
 ![SHAP](https://img.shields.io/badge/SHAP-explainability-yellow)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Colab](https://img.shields.io/badge/Colab-ready-f9ab00)
@@ -19,7 +20,7 @@
 
 FinShield scores every payment across **five independent signals** — XGBoost (supervised), Isolation Forest (anomaly), behavioral profiling, 8 deterministic rules, and a NetworkX entity graph — fused into one calibrated risk score (APPROVE / STEP_UP / INVESTIGATE / BLOCK). **SHAP** explains each decision mathematically; an instruction-tuned LLM copilot narrates the evidence for analysts.
 
-Three layers, one repo: `src/finsheild/` (research + training engine), `backend/` (FastAPI, 13 endpoints incl. live Cashfree webhooks), `frontend/` (React 19 + Vite investigation workstation).
+Three layers, one repo: `src/finsheild/` (research + training engine), `backend/` (FastAPI, 13 endpoints incl. live Cashfree webhooks), `frontend/` (Next.js 16 + React 19 investigation workstation).
 
 > [!IMPORTANT]
 > The LLM copilot acts purely as an observability and explainability layer. It provides context to fraud analysts but **never** overrides the deterministic or ML-driven risk scores.
@@ -156,7 +157,7 @@ The Fusion Engine combines signals using the following weights:
 ```text
 Finsheild/
 ├── backend/              # FastAPI app (13 endpoints, auto-discovers ML core)
-├── frontend/             # React 19 + Vite + Tailwind workstation
+├── frontend/             # Next.js 16 + React 19 + Tailwind workstation
 ├── start_app.sh          # one-click launcher (backend :8000 + frontend :5173)
 ├── src/finsheild/
 │   ├── data/           # loader, preprocessing, stratified splits
@@ -217,7 +218,7 @@ pytest -q
 
 ## Full-Stack App
 
-`backend/` (FastAPI, 13 endpoints) + `frontend/` (React 19 + Vite + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
+`backend/` (FastAPI, 13 endpoints) + `frontend/` (Next.js 16 + React 19 + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
 
 ```bash
 # One-click launcher (backend :8000 + frontend :5173)
@@ -244,7 +245,7 @@ Full guide (screens, endpoints, demo walkthrough): `docs/app.md`.
 - **Explainability**: SHAP
 - **LLM Finetuning**: Qwen2.5-0.5B-Instruct, PEFT (LoRA r=8), TRL SFTTrainer, bitsandbytes (4-bit quantization), transformers
 - **Backend**: FastAPI, Pydantic v2, Uvicorn
-- **Frontend**: React 19, Vite, Tailwind CSS, React Router
+- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS
 - **Engineering**: pytest, joblib, kagglehub, hatchling
 
 ---

@@ -6,7 +6,7 @@
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-8.2-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
@@ -27,7 +27,7 @@ It provides fraud analysts with a comprehensive toolkit: instant transaction sco
 
 ```mermaid
 graph TD
-    subgraph Frontend [Frontend - React/Vite]
+    subgraph Frontend [Frontend - Next.js/React]
         UI[React UI]
         Router[React Router]
         APIClient[Typed API Client]
@@ -70,11 +70,12 @@ Finsheild/                      # single repo: ML core + full-stack app
 │   │   ├── real_adapter.py    # Connects to trained XGBoost + risk fusion pipeline
 │   │   └── mock_adapter.py    # Deterministic demo scorer
 │   └── tests/test_api.py      # 7 API contract tests
-├── frontend/
-│   ├── src/App.tsx             # React Router (5 routes)
-│   ├── src/pages.tsx           # Dashboard, Investigation, Performance, Architecture, Privacy
-│   ├── src/api.ts              # Typed API client
-│   └── src/index.css           # Tailwind CSS dark cyber theme
+├── frontend/                     # Next.js 16 App Router
+│   ├── app/                      # /, /command-center, /investigate/[id], /performance, /architecture, /privacy/[uid], /glossary
+│   ├── components/site.tsx       # All workstation screens (client components)
+│   ├── lib/api.ts                # Typed API client + offline simulation fallback
+│   ├── lib/plain.ts              # Plain-English dictionary + offline copilot/identity
+│   └── app/globals.css           # Tailwind CSS dark cyber theme
 ├── start_app.sh                # One-click launcher (backend :8000 + frontend :5173)
 ├── src/finsheild/              # ML core (5-signal fusion engine)
 └── models/                     # Trained artifacts (XGBoost, scaler, thresholds)

@@ -1,6 +1,6 @@
-import { offlineExplain, offlineIdentity } from "./plain";
+import { offlineExplain, offlineIdentity } from "@/lib/plain";
 
-const API = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 let clientStore: Rec[] = [
   {

@@ -373,10 +373,10 @@ Finsheild/                            # Single repo: ML Core + full-stack app
 │   ├── metrics_loader.py              # Real ULB benchmark ingestion
 │   ├── services/store.py              # In-memory store & graph generator
 │   └── adapters/                      # Real (live ML core) + mock fallback
-├── frontend/                          # React 19 + Vite + Tailwind workstation
-│   ├── src/pages.tsx                  # Command Center, Investigation, Performance, Graph
-│   ├── src/api.ts                     # Typed API client
-│   └── src/index.css                  # Editorial tokens & typography
+├── frontend/                          # Next.js 16 + React 19 + Tailwind workstation
+│   ├── app/                           # App Router routes (all 7 screens)
+│   ├── lib/api.ts                     # Typed API client + offline fallback
+│   └── app/globals.css                # Editorial tokens & typography
 ├── models/                            # Serialized weights (XGBoost, Scaler)
 ├── evaluation/reports/                # Benchmark JSON & Markdown reports
 ├── tests/ + backend/tests/            # 215 passing unit, integration & API tests

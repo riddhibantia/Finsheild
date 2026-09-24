@@ -12,7 +12,7 @@ jupyter>=1.0
 tqdm>=4.60
 pyarrow>=15.0
 networkx>=3.0
-# Full-stack app (backend/ + frontend/): FastAPI + Vite React
+# Full-stack app (backend/ + frontend/): FastAPI + Next.js frontend
 fastapi>=0.110.0
 uvicorn>=0.28.0
 pydantic>=2.6.0

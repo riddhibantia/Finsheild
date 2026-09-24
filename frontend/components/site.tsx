@@ -1,8 +1,9 @@
-// oxlint-disable
+"use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { api, type Rec } from "./api";
-import { GLOSSARY, LEVEL_MEANINGS, RULE_MEANINGS, ruleMeaning, SCORE_MEANING, signalMeaning, whyFlagged } from "./plain";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { api, type Rec } from "@/lib/api";
+import { GLOSSARY, LEVEL_MEANINGS, RULE_MEANINGS, ruleMeaning, SCORE_MEANING, signalMeaning, whyFlagged } from "@/lib/plain";
 
 function Badge({ level }: { level: string }) {
   const c = level === "CRITICAL" ? "risk-CRITICAL" : level === "HIGH" ? "risk-HIGH" : level === "MEDIUM" ? "risk-MEDIUM" : "risk-LOW";
@@ -60,7 +61,7 @@ function NavHeader({ metrics, health }: { metrics?: any; health?: any }) {
     <header className="sticky top-0 z-30 backdrop-blur-md bg-[#F2EFE7]/90 border-b border-[#D8D4CA]">
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <div className="w-7 h-7 rounded-[7px] bg-[#171916] flex items-center justify-center text-white font-bold text-xs group-hover:bg-[#FF5B35] transition-colors">
               F
             </div>
@@ -75,11 +76,11 @@ function NavHeader({ metrics, health }: { metrics?: any; health?: any }) {
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">Command Center</Link>
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">Command Center</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/performance">Observatory</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/architecture">Architecture</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/privacy/U-00001">Privacy</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/glossary">Glossary</Link>
         </nav>
 
         <div className="flex items-center gap-2.5">
@@ -141,16 +142,16 @@ function FinShieldFooter() {
             <div>
               <div className="font-mono text-[9px] font-bold tracking-[1.2px] text-[#FF5B35] uppercase mb-3">Platform</div>
               <ul className="space-y-2 text-xs">
-                <li><Link to="/" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Command Center</Link></li>
-                <li><Link to="/performance" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Model Observatory</Link></li>
-                <li><Link to="/architecture" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Risk Fusion Engine</Link></li>
-                <li><Link to="/glossary" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Glossary (plain English)</Link></li>
+                <li><Link href="/" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Command Center</Link></li>
+                <li><Link href="/performance" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Model Observatory</Link></li>
+                <li><Link href="/architecture" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Risk Fusion Engine</Link></li>
+                <li><Link href="/glossary" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Glossary (plain English)</Link></li>
               </ul>
             </div>
             <div>
               <div className="font-mono text-[9px] font-bold tracking-[1.2px] text-[#FF5B35] uppercase mb-3">Protocols</div>
               <ul className="space-y-2 text-xs">
-                <li><Link to="/privacy/U-00001" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Tokenized Privacy</Link></li>
+                <li><Link href="/privacy/U-00001" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Tokenized Privacy</Link></li>
                 <li><span className="text-[#7F837B]">XGBoost 0.9709 ROC</span></li>
                 <li><span className="text-[#7F837B]">NetworkX Graph Rings</span></li>
               </ul>
@@ -251,7 +252,7 @@ export function LandingPage() {
         <header className="sticky top-0 z-30 backdrop-blur-md bg-[#F2EFE7]/90 border-b border-[#D8D4CA]">
           <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to="/" className="flex items-center gap-2 group">
+              <Link href="/" className="flex items-center gap-2 group">
                 <div className="w-7 h-7 rounded-[7px] bg-[#171916] flex items-center justify-center text-white font-bold text-xs group-hover:bg-[#FF5B35] transition-colors">
                   F
                 </div>
@@ -266,17 +267,17 @@ export function LandingPage() {
             </div>
 
             <nav className="hidden md:flex items-center gap-6">
-              <Link className="font-nav-link text-[#FF5B35] font-bold" to="/">Overview</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/command-center">Command Center</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
+              <Link className="font-nav-link text-[#FF5B35] font-bold" href="/">Overview</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/command-center">Command Center</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/performance">Observatory</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/architecture">Architecture</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/privacy/U-00001">Privacy</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/glossary">Glossary</Link>
             </nav>
 
             <div className="flex items-center gap-3">
               <Src s={health ? (health.adapter === "real" ? "LIVE_MODEL" : "DEMO_FALLBACK") : "DEMO_FALLBACK"} />
-              <Link to="/command-center" className="btn-primary py-2 px-3 text-[9px]">
+              <Link href="/command-center" className="btn-primary py-2 px-3 text-[9px]">
                 Launch Console ↗
               </Link>
             </div>
@@ -298,10 +299,10 @@ export function LandingPage() {
                   Let safe payments move.
                 </h1>
                 <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <Link to="/command-center" className="btn-primary py-3.5 px-6 text-xs font-bold tracking-wider">
+                  <Link href="/command-center" className="btn-primary py-3.5 px-6 text-xs font-bold tracking-wider">
                     Launch Command Center ↗
                   </Link>
-                  <Link to="/performance" className="btn-secondary py-3 px-6 text-xs font-bold tracking-wider">
+                  <Link href="/performance" className="btn-secondary py-3 px-6 text-xs font-bold tracking-wider">
                     Model Observatory
                   </Link>
                 </div>
@@ -535,7 +536,7 @@ export function LandingPage() {
 
                     <div className="p-3 bg-[#222521] rounded-[7px] border border-[#383B36] font-mono text-xs text-[#A7AAA3] flex items-center justify-between">
                       <span>Composite Risk Score: <strong className={upiResult.score.risk_score >= 0.7 ? "text-[#FF5B35]" : "text-[#4CAF50]"}>{(upiResult.score.risk_score * 100).toFixed(1)}/100</strong></span>
-                      <Link to={`/investigate/${upiResult.transaction.transaction_id}`} className="text-[#FF5B35] hover:underline">
+                      <Link href={`/investigate/${upiResult.transaction.transaction_id}`} className="text-[#FF5B35] hover:underline">
                         Open Forensic Graph →
                       </Link>
                     </div>
@@ -588,7 +589,7 @@ export function LandingPage() {
                 <span className="badge-pill mb-1 inline-block">Validation Telemetry</span>
                 <h2 className="font-title-strong text-2xl text-[#171916]">Model Performance & Benchmarks</h2>
               </div>
-              <Link to="/performance" className="font-mono text-xs text-[#FF5B35] font-semibold hover:underline">
+              <Link href="/performance" className="font-mono text-xs text-[#FF5B35] font-semibold hover:underline">
                 Full Observatory →
               </Link>
             </div>
@@ -626,7 +627,7 @@ export function CommandCenter() {
   const [running, setRunning] = useState(false);
   const [demoStep, setDemoStep] = useState(0);
   const lastRef = useRef<string | null>(null);
-  const nav = useNavigate();
+  const router = useRouter();
 
   async function refresh() {
     try {
@@ -656,10 +657,10 @@ export function CommandCenter() {
   const critical = items.filter((r) => r.score.risk_level === "CRITICAL");
 
   async function doDemoAction(a: string) {
-    if (a === "suspicious") { const r: any = await api.generate("suspicious"); await refresh(); nav(`/investigate/${r.transaction.transaction_id}`); }
-    else if (a === "fraud_ring") { const r: any = await api.generate("fraud_ring"); await refresh(); nav(`/investigate/${r.transaction.transaction_id}`); }
-    else if (a === "open_last") { if (lastRef.current) nav(`/investigate/${lastRef.current}`); else { const r: any = await api.generate("suspicious"); nav(`/investigate/${r.transaction.transaction_id}`); } }
-    else if (a === "reset") { await api.reset(); refresh(); nav("/command-center"); }
+    if (a === "suspicious") { const r: any = await api.generate("suspicious"); await refresh(); router.push(`/investigate/${r.transaction.transaction_id}`); }
+    else if (a === "fraud_ring") { const r: any = await api.generate("fraud_ring"); await refresh(); router.push(`/investigate/${r.transaction.transaction_id}`); }
+    else if (a === "open_last") { if (lastRef.current) router.push(`/investigate/${lastRef.current}`); else { const r: any = await api.generate("suspicious"); router.push(`/investigate/${r.transaction.transaction_id}`); } }
+    else if (a === "reset") { await api.reset(); refresh(); router.push("/command-center"); }
   }
 
   // Manual UPI Simulation State
@@ -680,6 +681,13 @@ export function CommandCenter() {
   const [cfOutCopied, setCfOutCopied] = useState<boolean>(false);
   const [studioTab, setStudioTab] = useState<"cashfree" | "upi" | "stream">("cashfree");
   const [showSteps, setShowSteps] = useState<boolean>(false);
+
+  // Webhook URL resolves client-side only (SSR has no window).
+  const [webhookUrl, setWebhookUrl] = useState("<YOUR-CLOUDFLARE-URL>/api/webhooks/cashfree");
+  useEffect(() => {
+    const o = window.location.origin;
+    if (!o.includes("localhost") && !o.includes("127.0.0.1")) setWebhookUrl(`${o}/api/webhooks/cashfree`);
+  }, []);
 
   async function handleCashfreeTest(overrideAmt?: number, overrideUpi?: string) {
     const amt = overrideAmt !== undefined ? overrideAmt : cfAmount;
@@ -740,7 +748,7 @@ export function CommandCenter() {
         <header className="sticky top-0 z-30 backdrop-blur-md bg-[#F2EFE7]/90 border-b border-[#D8D4CA]">
           <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to="/" className="flex items-center gap-2 group">
+              <Link href="/" className="flex items-center gap-2 group">
                 <div className="w-7 h-7 rounded-[7px] bg-[#171916] flex items-center justify-center text-white font-bold text-xs group-hover:bg-[#FF5B35] transition-colors">
                   F
                 </div>
@@ -755,12 +763,12 @@ export function CommandCenter() {
             </div>
 
             <nav className="hidden md:flex items-center gap-6">
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Landing Page</Link>
-              <Link className="font-nav-link text-[#FF5B35] font-bold" to="/command-center">Command Center</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
-              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">← Landing Page</Link>
+              <Link className="font-nav-link text-[#FF5B35] font-bold" href="/command-center">Command Center</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/performance">Observatory</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/architecture">Architecture</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/privacy/U-00001">Privacy</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/glossary">Glossary</Link>
             </nav>
 
             <div className="flex items-center gap-2.5">
@@ -809,7 +817,7 @@ export function CommandCenter() {
                     key={i}
                     onClick={() => {
                       setDemoStep(i);
-                      if (s.path) nav(s.path);
+                      if (s.path) router.push(s.path);
                       else if (s.action) doDemoAction(s.action);
                     }}
                     className={`font-mono text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-[6px] border transition-all ${
@@ -913,10 +921,7 @@ export function CommandCenter() {
                       </span>
                       <button
                         onClick={() => {
-                          const url = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-                            ? "<YOUR-CLOUDFLARE-URL>/api/webhooks/cashfree"
-                            : `${window.location.origin}/api/webhooks/cashfree`;
-                          navigator.clipboard.writeText(url);
+                          navigator.clipboard.writeText(webhookUrl);
                           setCfCopied(true);
                           setTimeout(() => setCfCopied(false), 2000);
                         }}
@@ -926,9 +931,7 @@ export function CommandCenter() {
                       </button>
                     </div>
                     <code className="block bg-[#171916] p-2 rounded text-[10px] text-[#26A69A] border border-[#2B2D2A] break-all select-all">
-                      {window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-                        ? "<YOUR-CLOUDFLARE-URL>/api/webhooks/cashfree"
-                        : `${window.location.origin}/api/webhooks/cashfree`}
+                      {webhookUrl}
                     </code>
                     <div className="text-[10px] text-[#7F837B] space-y-1">
                       <p>• Added in Cashfree Dashboard → Developers → Webhooks</p>
@@ -999,7 +1002,7 @@ export function CommandCenter() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge level={cfResult.risk_level} />
-                      <Link to={`/investigate/${cfResult.transaction_id}`} className="btn-secondary py-1 px-2.5 text-[9px]">
+                      <Link href={`/investigate/${cfResult.transaction_id}`} className="btn-secondary py-1 px-2.5 text-[9px]">
                         Inspect Payload ↗
                       </Link>
                     </div>
@@ -1102,7 +1105,7 @@ export function CommandCenter() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge level={upiResult.score.risk_level} />
-                      <Link to={`/investigate/${upiResult.transaction.transaction_id}`} className="btn-secondary py-1 px-2.5 text-[9px]">
+                      <Link href={`/investigate/${upiResult.transaction.transaction_id}`} className="btn-secondary py-1 px-2.5 text-[9px]">
                         Forensics ↗
                       </Link>
                     </div>
@@ -1153,7 +1156,7 @@ export function CommandCenter() {
                   alerts.slice(0, 12).map((r) => (
                     <Link
                       key={r.transaction.transaction_id as string}
-                      to={`/investigate/${r.transaction.transaction_id}`}
+                      href={`/investigate/${r.transaction.transaction_id}`}
                       className="flex items-center justify-between border border-[#E7E4DB] rounded-[11px] p-3 hover:bg-[#FFFFFF] transition-all bg-[#F2EFE7]"
                     >
                       <div>
@@ -1181,7 +1184,7 @@ export function CommandCenter() {
                 {items.slice(0, 10).map((r) => (
                   <Link
                     key={r.transaction.transaction_id as string}
-                    to={`/investigate/${r.transaction.transaction_id}`}
+                    href={`/investigate/${r.transaction.transaction_id}`}
                     className="flex justify-between items-center font-mono text-xs border border-[#E7E4DB] rounded-[7px] p-2 hover:bg-[#FFFFFF] transition-all"
                   >
                     <span className="text-[#171916] font-semibold">{r.transaction.transaction_id as string}</span>
@@ -1217,7 +1220,7 @@ export function CommandCenter() {
                     <tr key={r.transaction.transaction_id as string} className="border-b border-[#E7E4DB] hover:bg-[#FFFFFF] transition-colors">
                       <td className="py-2.5">
                         <div className="flex items-center gap-2">
-                          <Link className="text-[#FF5B35] font-semibold hover:underline" to={`/investigate/${r.transaction.transaction_id}`}>
+                          <Link className="text-[#FF5B35] font-semibold hover:underline" href={`/investigate/${r.transaction.transaction_id}`}>
                             {r.transaction.transaction_id as string}
                           </Link>
                           {(String(r.transaction.transaction_id).startsWith("CF-") || r.transaction.gateway === "Cashfree") && (
@@ -1714,8 +1717,8 @@ function ForensicEntityGraph({ graph, txnId }: { graph: any; txnId: string }) {
 }
 
 export function Investigation() {
-  const { id } = useParams();
-  const nav = useNavigate();
+  const { id } = useParams() as { id: string };
+  const router = useRouter();
   const [rec, setRec] = useState<Rec | null>(null);
   const [copilot, setCopilot] = useState<any>(null);
   const [graph, setGraph] = useState<any>(null);
@@ -1733,7 +1736,7 @@ export function Investigation() {
     <div className="min-h-screen bg-[#F2EFE7] p-8">
       <div className="max-w-6xl mx-auto space-y-4">
         <div className="font-mono text-sm text-[#7F837B]">Loading transaction telemetry…</div>
-        <button className="btn-secondary py-1.5 px-4" onClick={() => nav("/")}>← Back to Command Center</button>
+        <button className="btn-secondary py-1.5 px-4" onClick={() => router.push("/")}>← Back to Command Center</button>
       </div>
     </div>
   );
@@ -1749,7 +1752,7 @@ export function Investigation() {
 
         <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
           <div className="flex items-center justify-between">
-            <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Command Center</Link>
+            <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">← Command Center</Link>
             <div className="flex items-center gap-2">
               <Src s={s.source} />
               <Tip label={<Badge level={s.risk_level} />} text={LEVEL_MEANINGS[s.risk_level] ?? s.risk_level} />
@@ -2025,7 +2028,7 @@ export function Performance() {
         <NavHeader />
 
         <main className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Command Center</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">← Command Center</Link>
           <div className="border-b border-[#D8D4CA] pb-3">
             <span className="badge-pill mb-1 inline-block">Validation Laboratory</span>
             <h1 className="font-title-strong text-2xl text-[#171916]">Model Performance & Benchmarks</h1>
@@ -2085,7 +2088,7 @@ export function Architecture() {
         <NavHeader />
 
         <main className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Command Center</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">← Command Center</Link>
           <div className="border-b border-[#D8D4CA] pb-3">
             <span className="badge-pill mb-1 inline-block">System Design</span>
             <h1 className="font-title-strong text-2xl text-[#171916]">FinShield Architecture & Data Flow</h1>
@@ -2140,7 +2143,7 @@ export function Architecture() {
 }
 
 export function Privacy() {
-  const { uid } = useParams();
+  const { uid } = useParams() as { uid: string };
   const [d, setD] = useState<any>(null);
 
   useEffect(() => {
@@ -2153,7 +2156,7 @@ export function Privacy() {
         <NavHeader />
 
         <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Command Center</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" href="/">← Command Center</Link>
           <div className="border-b border-[#D8D4CA] pb-3">
             <span className="badge-pill mb-1 inline-block">Security Protocol</span>
             <h1 className="font-title-strong text-2xl text-[#171916]">Privacy-Preserving Identity Layer</h1>

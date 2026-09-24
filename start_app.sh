@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Finsheild full-stack launcher: FastAPI backend (:8000) + Vite React frontend (:5173).
+# Finsheild full-stack launcher: FastAPI backend (:8000) + Next.js frontend (:5173).
 # Run from repo root:  bash start_app.sh   (or: chmod +x start_app.sh; ./start_app.sh)
 set -euo pipefail
 
@@ -31,4 +31,4 @@ if [ ! -d node_modules ]; then
 fi
 
 echo "Starting FinSheild Frontend on :5173..."
-npm run dev -- --host 127.0.0.1 --port 5173
+npm run dev -- --hostname 127.0.0.1 --port 5173
