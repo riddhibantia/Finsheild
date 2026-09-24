@@ -183,7 +183,7 @@ async function req(path: string, init?: RequestInit) {
       const isSus = scenario === "suspicious" || scenario === "fraud_ring";
       const txn = {
         transaction_id: `TX-${Date.now().toString().slice(-6)}`,
-        user_id: isSus ? "U-MULE-09" : "U-AKRAM-01",
+        user_id: isSus ? "U-MULE-09" : "U-00001",
         amount: isSus ? 125000.0 : 65.0,
         timestamp: new Date().toISOString(),
         merchant: isSus ? "unknown_crypto_p2p" : "chai_point",
@@ -213,14 +213,6 @@ async function req(path: string, init?: RequestInit) {
         ],
       };
     }
-    if (path.startsWith("/api/privacy/")) {
-      return {
-        user_id: "usr_demo_okhdfc",
-        tokenized_hash: "sha256_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        phone_masked: "+91 98**** *120",
-        salt_version: "v2-2026",
-      };
-    }
     if (path.startsWith("/api/webhooks/cashfree")) {
       let body: any = {};
       try {
@@ -230,7 +222,7 @@ async function req(path: string, init?: RequestInit) {
       const payment = data.payment || {};
       const order = data.order || {};
       const amount = Number(payment.payment_amount || order.order_amount || body.amount || 75.0);
-      const upi_id = payment.payment_method?.upi?.upi_id || body.upi_id || "rahul@okhdfcbank";
+      const upi_id = payment.payment_method?.upi?.upi_id || body.upi_id || "payer@okhdfcbank";
       const cf_id = payment.cf_payment_id || `CF-${Date.now()}`;
       
       const txn = {

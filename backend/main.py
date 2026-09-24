@@ -334,13 +334,13 @@ def cashfree_simulate(amount: float = 75.0, status: str = "SUCCESS", upi_id: str
     sample_payload = {
         "data": {
             "order": {
-                "order_id": f"order_sim_{datetime.now(timezone.utc).strftime('%H%M%S')}",
+                "order_id": f"order_sim_{datetime.now(timezone.utc).strftime('%H%M%S%f')}",
                 "order_amount": amount,
                 "order_currency": "INR",
                 "order_tags": None,
             },
             "payment": {
-                "cf_payment_id": f"pay_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}",
+                "cf_payment_id": f"pay_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}",
                 "payment_status": status,
                 "payment_amount": amount,
                 "payment_currency": "INR",
