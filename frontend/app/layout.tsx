@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "FinShield — Multi-Signal Fraud Defense Platform",
   description:
     "Real-time fraud defense: XGBoost + 5-signal risk fusion, SHAP explainability, entity graph forensics, and an AI investigation copilot.",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: "/favicon.svg?v=2" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
