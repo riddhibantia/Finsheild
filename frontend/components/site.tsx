@@ -159,7 +159,7 @@ function FinShieldFooter() {
             <div>
               <div className="font-mono text-[9px] font-bold tracking-[1.2px] text-[#FF5B35] uppercase mb-3">License & Code</div>
               <ul className="space-y-2 text-xs">
-                <li><a href="https://github.com/riddhibantia/shieldfin" target="_blank" rel="noreferrer" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">GitHub Repository</a></li>
+                <li><a href="https://github.com/riddhibantia/finshield" target="_blank" rel="noreferrer" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">GitHub Repository</a></li>
                 <li><span className="text-[#7F837B]">MIT Open Source</span></li>
               </ul>
             </div>

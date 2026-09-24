@@ -51,7 +51,7 @@ import urllib.request
 from pathlib import Path
 
 DEFAULT_OWNER = "riddhibantia"
-DEFAULT_REPO = "shieldfin"
+DEFAULT_REPO = "finshield"
 
 
 def _download(url: str) -> bytes:

@@ -42,7 +42,7 @@ def test_module_loads():
     assert hasattr(mod, "fetch_tarball")
     assert hasattr(mod, "extract_tarball")
     assert mod.DEFAULT_OWNER == "riddhibantia"
-    assert mod.DEFAULT_REPO == "shieldfin"
+    assert mod.DEFAULT_REPO == "finshield"
 
 
 def test_extract_tarball_smoke(tmp_dir):
@@ -85,7 +85,7 @@ def test_argparser_defaults():
     p.add_argument("--dest", type=Path, default=Path("/content/Finsheild"))
     args = p.parse_args([])
     assert args.owner == "riddhibantia"
-    assert args.repo == "shieldfin"
+    assert args.repo == "finshield"
     assert args.branch == "main"
     if os.environ.get("FINSHEILD_RUN_NETWORK_TESTS") != "1":
         pytest.skip("set FINSHEILD_RUN_NETWORK_TESTS=1 to enable real-fetch test")
