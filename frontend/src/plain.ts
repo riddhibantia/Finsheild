@@ -68,6 +68,83 @@ export function whyFlagged(score: {
   return `This was flagged ${reason}. ${action}`;
 }
 
+/** Deterministic offline copilot: mirrors backend /api/investigation/explain. */
+export function offlineExplain(body: {
+  transaction_amount: number;
+  usual_amount: number;
+  new_device: boolean;
+  location_distance_km: number;
+  recent_transaction_count: number;
+  xgboost_score: number;
+  anomaly_score: number;
+  triggered_rules: string[];
+}): {
+  risk_level: string;
+  fraud_type: string;
+  summary: string;
+  evidence: string[];
+  recommended_action: string;
+  source: "DEMO_FALLBACK";
+} {
+  const usual = body.usual_amount > 0 ? body.usual_amount : 1;
+  let fraud_type = "BEHAVIORAL_ANOMALY";
+  if (body.transaction_amount > usual * 3 && body.new_device) fraud_type = "ACCOUNT_TAKEOVER";
+  else if (body.recent_transaction_count >= 5) fraud_type = "VELOCITY_ABUSE";
+  else if (body.new_device) fraud_type = "DEVICE_COMPROMISE";
+  else if (body.location_distance_km > 300) fraud_type = "GEO_ANOMALY";
+  const xgb = body.xgboost_score;
+  const risk_level = xgb >= 0.7 ? "HIGH" : xgb >= 0.4 ? "MEDIUM" : "LOW";
+  const recommended_action =
+    xgb >= 0.7
+      ? "BLOCK and investigate — multiple strong signals"
+      : xgb >= 0.4
+        ? "STEP-UP verification (OTP / biometric)"
+        : "APPROVE — no further action";
+  return {
+    risk_level,
+    fraud_type,
+    summary:
+      `This transaction was flagged because amount deviation is ${(body.transaction_amount / usual).toFixed(1)}× vs usual, ` +
+      `device is ${body.new_device ? "new" : "known"}, location distance ${Math.round(body.location_distance_km)}km, ` +
+      `velocity ${body.recent_transaction_count} recent, XGB ${xgb.toFixed(2)}, anomaly ${body.anomaly_score.toFixed(2)}. ` +
+      `Rules: ${body.triggered_rules.length ? body.triggered_rules.join(", ") : "none"}. ` +
+      `This explanation does not set the risk score — the risk engine does.`,
+    evidence: [
+      `Amount ${body.transaction_amount} vs usual ${body.usual_amount}`,
+      `Device ${body.new_device ? "new" : "known"}`,
+      `Velocity ${body.recent_transaction_count}`,
+      `Anomaly ${body.anomaly_score.toFixed(2)}`,
+    ],
+    recommended_action,
+    source: "DEMO_FALLBACK",
+  };
+}
+
+/** Deterministic offline identity: mirrors backend tokenize() shape the Privacy page reads. */
+export function offlineIdentity(uid: string): {
+  user_id: string;
+  token: string;
+  phone_masked: string;
+  id_token: string;
+  verification: string;
+  method: string;
+  kind: string;
+} {
+  let h1 = 0;
+  const s = `finsheild-salt::${uid}`;
+  for (let i = 0; i < s.length; i++) h1 = (h1 * 31 + s.charCodeAt(i)) >>> 0;
+  const hex = h1.toString(16).padStart(8, "0");
+  return {
+    user_id: uid,
+    token: `${hex.slice(0, 4)}…${hex.slice(-4)}`,
+    phone_masked: "••••••••42",
+    id_token: `tok_${hex.slice(0, 4)}…`,
+    verification: "VERIFIED",
+    method: "Prototype Salted SHA-256 Pseudonymization (offline simulation)",
+    kind: "DEMO_SIMULATION",
+  };
+}
+
 export const GLOSSARY: { term: string; meaning: string }[] = [
   { term: "Risk score", meaning: "One number 0–1 for the whole payment. Under 0.30 approves, over 0.85 blocks." },
   { term: "Risk level", meaning: "The score in words: LOW, MEDIUM, HIGH, CRITICAL. Each maps to an action." },

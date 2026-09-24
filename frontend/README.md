@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# FinShield Frontend — React 19 + Vite + Tailwind
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Investigation workstation for the FinShield fraud platform. Works **fully offline**:
+every API call in `src/api.ts` falls back to the built-in simulation engine
+(`src/plain.ts` + client scorer) when no backend is reachable, so the static
+build is a complete interactive demo with zero hosting cost.
 
-Currently, two official plugins are available:
+## Develop
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev        # http://127.0.0.1:5173 (uses live backend if up, else simulation)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Point at a backend explicitly with `VITE_API_URL=http://127.0.0.1:8000`.
+
+## Host the static demo (no backend needed)
+
+```bash
+npm run build      # outputs frontend/dist/
+```
+
+Deploy `dist/` anywhere static:
+
+| Host | How |
+|---|---|
+| Vercel / Netlify | root `frontend/`, build `npm run build`, publish `dist/` |
+| GitHub Pages (project) | `VITE_BASE=/Finsheild/ npm run build`, publish `dist/` to `gh-pages` |
+| Any static server | `npx vite preview` or copy `dist/` to nginx/S3 |
+
+No server rewrites needed — the app uses `HashRouter`. With no backend,
+all pages (Command Center, Investigation, Performance, Privacy, Glossary,
+Cashfree studio) run on the offline simulation with honest `DEMO_FALLBACK` labels.
+
+## Check
+
+```bash
+npm run build      # tsc + vite must pass with zero errors
+npm run lint
+```

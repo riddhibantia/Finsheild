@@ -1,3 +1,5 @@
+import { offlineExplain, offlineIdentity } from "./plain";
+
 const API = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
 let clientStore: Rec[] = [
@@ -197,6 +199,12 @@ async function req(path: string, init?: RequestInit) {
     if (path.startsWith("/api/transactions/")) {
       const id = path.split("/").pop();
       return clientStore.find((r) => r.transaction.transaction_id === id) || clientStore[0];
+    }
+    if (path === "/api/investigation/explain") {
+      return offlineExplain(JSON.parse((init?.body as string) || "{}"));
+    }
+    if (path.startsWith("/api/identity/")) {
+      return offlineIdentity(decodeURIComponent(path.split("/").pop() || "U-00001"));
     }
     if (path.startsWith("/api/graph/")) {
       return {
