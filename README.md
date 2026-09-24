@@ -1,14 +1,14 @@
 <div align="center">
 
-# FinSheild ML Core
+# FinShield
 
-**Hybrid, Multi-Signal Fraud Detection Engine for Digital Payments**
+**Real-Time, Multi-Signal Fraud Defense for Digital Payments — ML Engine + API + Dashboard in One Repo**
 
-![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Tests](https://img.shields.io/badge/tests-215%20passing-success)
-![XGBoost](https://img.shields.io/badge/XGBoost-enabled-orange)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-enabled-blue)
-![NetworkX](https://img.shields.io/badge/NetworkX-enabled-lightgrey)
+![XGBoost ROC-AUC 0.97](https://img.shields.io/badge/XGBoost-ROC--AUC%200.97-orange)
+![FastAPI](https://img.shields.io/badge/FastAPI-13%20endpoints-009688)
+![React](https://img.shields.io/badge/React-19%20%2B%20Vite-61DAFB)
 ![SHAP](https://img.shields.io/badge/SHAP-explainability-yellow)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Colab](https://img.shields.io/badge/Colab-ready-f9ab00)
@@ -17,14 +17,21 @@
 
 ## Overview
 
-FinSheild ML Core is the research and training engine behind the FinSheild fraud detection platform. It implements a hybrid, multi-signal fraud detection architecture that evaluates digital payments across five independent axes. 
+FinShield scores every payment across **five independent signals** — XGBoost (supervised), Isolation Forest (anomaly), behavioral profiling, 8 deterministic rules, and a NetworkX entity graph — fused into one calibrated risk score (APPROVE / STEP_UP / INVESTIGATE / BLOCK). **SHAP** explains each decision mathematically; an instruction-tuned LLM copilot narrates the evidence for analysts.
 
-The signals are aggregated via a **Risk Fusion Engine**, which calculates a weighted risk score to produce actionable decisions (APPROVE, STEP_UP, INVESTIGATE, BLOCK). **SHAP** (SHapley Additive exPlanations) is used to interpret the fusion outcomes, while an instruction-tuned LLM copilot explains these decisions in natural language.
+Three layers, one repo: `src/finsheild/` (research + training engine), `backend/` (FastAPI, 13 endpoints incl. live Cashfree webhooks), `frontend/` (React 19 + Vite investigation workstation).
 
 > [!IMPORTANT]
 > The LLM copilot acts purely as an observability and explainability layer. It provides context to fraud analysts but **never** overrides the deterministic or ML-driven risk scores.
 
-The full-stack app (FastAPI backend + React/Vite frontend) lives in this repo under `backend/` and `frontend/` — see [Full-Stack App](#full-stack-app) below. Full app guide: `docs/app.md`.
+## Run the Demo (2 Minutes)
+
+```bash
+pip install -r requirements.txt
+bash start_app.sh
+```
+
+Open **http://127.0.0.1:5173** → Command Center → inject a **Fraud Ring** → click it for the forensic view (risk radar, SHAP bars, copilot, entity graph). Or fire a gateway payment yourself from the Cashfree studio tab (₹75 scores LOW, ₹1,00,000 scores CRITICAL). API docs at **http://127.0.0.1:8000/docs**. Full guide: `docs/app.md`.
 
 ---
 
@@ -208,7 +215,7 @@ pytest -q
 
 ## Full-Stack App
 
-`backend/` (FastAPI, 11 endpoints) + `frontend/` (React 19 + Vite + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
+`backend/` (FastAPI, 13 endpoints) + `frontend/` (React 19 + Vite + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
 
 ```bash
 # One-click launcher (backend :8000 + frontend :5173)
@@ -234,6 +241,8 @@ Full guide (screens, endpoints, demo walkthrough): `docs/app.md`.
 - **Graph & Analysis**: NetworkX, pandas
 - **Explainability**: SHAP
 - **LLM Finetuning**: Qwen2.5-0.5B-Instruct, PEFT (LoRA r=8), TRL SFTTrainer, bitsandbytes (4-bit quantization), transformers
+- **Backend**: FastAPI, Pydantic v2, Uvicorn
+- **Frontend**: React 19, Vite, Tailwind CSS, React Router
 - **Engineering**: pytest, joblib, kagglehub, hatchling
 
 ---
@@ -245,6 +254,10 @@ Full guide (screens, endpoints, demo walkthrough): `docs/app.md`.
 - **LLM Latency**: The LLM copilot currently runs asynchronously due to inference latency.
 
 ---
+
+## Author
+
+Built by **Riddhi Bantia** — ML engine, API, and frontend in this repo.
 
 ## License
 
