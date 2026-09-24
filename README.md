@@ -26,6 +26,10 @@ Three layers, one repo: `src/finsheild/` (research + training engine), `backend/
 
 ## Run the Demo (2 Minutes)
 
+**No install — live hosted demo:** https://riddhibantia.github.io/Finsheild/ (runs fully offline on the built-in simulation; no backend needed).
+
+Or run the full stack locally:
+
 ```bash
 pip install -r requirements.txt
 bash start_app.sh
