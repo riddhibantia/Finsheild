@@ -13,6 +13,32 @@ function Src({ s }: { s: string }) {
   return <span className={`mono text-[9px] uppercase tracking-[1px] px-2 py-0.5 rounded-full border ${cl}`}>{s.replace("_", " ")}</span>;
 }
 
+// Static example shown in the Cashfree Demo Output Panel before the first live call.
+const SAMPLE_CF_OUTPUT = {
+  status: "processed",
+  gateway: "Cashfree",
+  transaction_id: "CF-CF_PAY_DEMO_1",
+  risk_score: 0.035,
+  risk_level: "LOW",
+  record: {
+    transaction: {
+      transaction_id: "CF-CF_PAY_DEMO_1",
+      user_id: "payer@okhdfcbank",
+      amount: 75.0,
+      merchant: "Cashfree Payment Rail",
+      channel: "UPI",
+      gateway: "Cashfree",
+    },
+    score: {
+      risk_score: 0.035,
+      risk_level: "LOW",
+      rules: [],
+      evidence: ["Everyday transaction verified safe"],
+      source: "LIVE_MODEL",
+    },
+  },
+};
+
 function Card({ children, className = "", alt = false, dark = false }: { children: any; className?: string; alt?: boolean; dark?: boolean }) {
   const base = dark ? "card-dark" : alt ? "card-alt" : "card-white";
   return <div className={`${base} p-5 ${className}`}>{children}</div>;
@@ -637,6 +663,7 @@ export function CommandCenter() {
   const [cfProcessing, setCfProcessing] = useState<boolean>(false);
   const [cfResult, setCfResult] = useState<any>(null);
   const [cfCopied, setCfCopied] = useState<boolean>(false);
+  const [cfOutCopied, setCfOutCopied] = useState<boolean>(false);
   const [studioTab, setStudioTab] = useState<"cashfree" | "upi" | "stream">("cashfree");
   const [showSteps, setShowSteps] = useState<boolean>(false);
 
@@ -963,6 +990,51 @@ export function CommandCenter() {
                     </div>
                   </div>
                 )}
+
+                {/* Demo Output Panel: scored webhook JSON + curl */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-[#212320] p-3.5 rounded-[9px] border border-[#2B2D2A] space-y-2 font-mono text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#A7AAA3] font-semibold text-[11px]">
+                        {cfResult ? "✓ Live Webhook Output" : "Sample Webhook Output"}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            JSON.stringify(cfResult ?? SAMPLE_CF_OUTPUT, null, 2)
+                          );
+                          setCfOutCopied(true);
+                          setTimeout(() => setCfOutCopied(false), 2000);
+                        }}
+                        className="text-[9px] px-2 py-0.5 rounded bg-[#2B2D2A] text-[#F2EFE7] hover:bg-[#3D403C] border border-[#40443E] transition-all"
+                      >
+                        {cfOutCopied ? "✓ Copied!" : "📋 Copy JSON"}
+                      </button>
+                    </div>
+                    <pre className="block bg-[#171916] p-2.5 rounded text-[10px] leading-relaxed text-[#A7AAA3] border border-[#2B2D2A] overflow-x-auto max-h-64 overflow-y-auto select-all">
+                      {JSON.stringify(cfResult ?? SAMPLE_CF_OUTPUT, null, 2)}
+                    </pre>
+                    <p className="text-[10px] text-[#7F837B]">
+                      {cfResult
+                        ? "↑ Output of your last Ingest & Score call — also saved to the ledger."
+                        : "↑ Example output. Hit “Ingest & Score” above to replace it with a live result."}
+                    </p>
+                  </div>
+
+                  <div className="bg-[#212320] p-3.5 rounded-[9px] border border-[#2B2D2A] space-y-2 font-mono text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#A7AAA3] font-semibold text-[11px]">Fire It Yourself (curl)</span>
+                    </div>
+                    <pre className="block bg-[#171916] p-2.5 rounded text-[10px] leading-relaxed text-[#26A69A] border border-[#2B2D2A] overflow-x-auto whitespace-pre-wrap break-all select-all">
+                      {`curl -X POST http://127.0.0.1:8000/api/webhooks/cashfree \\
+  -H "Content-Type: application/json" \\
+  -d '{"data":{"order":{"order_id":"ORD_DEMO_1","order_amount":75.0},"payment":{"cf_payment_id":"CF_PAY_DEMO_1","payment_status":"SUCCESS","payment_amount":75.0,"payment_method":{"upi":{"upi_id":"payer@okhdfcbank"}},"payment_group":"upi"},"customer_details":{"customer_phone":"+919876543210"}},"type":"PAYMENT_SUCCESS_WEBHOOK"}'`}
+                    </pre>
+                    <p className="text-[10px] text-[#7F837B]">
+                      • Change <span className="text-[#F2EFE7]">order_amount</span> to 125000 to watch it flip to CRITICAL.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
