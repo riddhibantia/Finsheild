@@ -1,5 +1,5 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
-import { Architecture, CommandCenter, Investigation, LandingPage, Performance, Privacy } from "./pages";
+import { Architecture, CommandCenter, Glossary, Investigation, LandingPage, Performance, Privacy } from "./pages";
 
 export default function App() {
   return (
@@ -12,6 +12,7 @@ export default function App() {
         <Route path="/performance" element={<Performance />} />
         <Route path="/architecture" element={<Architecture />} />
         <Route path="/privacy/:uid" element={<Privacy />} />
+        <Route path="/glossary" element={<Glossary />} />
       </Routes>
     </HashRouter>
   );

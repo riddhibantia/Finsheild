@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, type Rec } from "./api";
+import { GLOSSARY, LEVEL_MEANINGS, RULE_MEANINGS, ruleMeaning, SCORE_MEANING, signalMeaning, whyFlagged } from "./plain";
 
 function Badge({ level }: { level: string }) {
   const c = level === "CRITICAL" ? "risk-CRITICAL" : level === "HIGH" ? "risk-HIGH" : level === "MEDIUM" ? "risk-MEDIUM" : "risk-LOW";
@@ -44,6 +45,16 @@ function Card({ children, className = "", alt = false, dark = false }: { childre
   return <div className={`${base} p-5 ${className}`}>{children}</div>;
 }
 
+/** Hover tooltip: dotted term + plain-English bubble. */
+function Tip({ label, text, dark = false }: { label: any; text: string; dark?: boolean }) {
+  return (
+    <span className="tip" tabIndex={0}>
+      <span className="tip-dots">{label}</span>
+      <span className="tip-box" style={dark ? { background: "#F2EFE7", color: "#171916" } : undefined}>{text}</span>
+    </span>
+  );
+}
+
 function NavHeader({ metrics, health }: { metrics?: any; health?: any }) {
   return (
     <header className="sticky top-0 z-30 backdrop-blur-md bg-[#F2EFE7]/90 border-b border-[#D8D4CA]">
@@ -68,6 +79,7 @@ function NavHeader({ metrics, health }: { metrics?: any; health?: any }) {
           <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
           <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
           <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
+          <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
         </nav>
 
         <div className="flex items-center gap-2.5">
@@ -132,6 +144,7 @@ function FinShieldFooter() {
                 <li><Link to="/" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Command Center</Link></li>
                 <li><Link to="/performance" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Model Observatory</Link></li>
                 <li><Link to="/architecture" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Risk Fusion Engine</Link></li>
+                <li><Link to="/glossary" className="text-[#A7AAA3] hover:text-[#F2EFE7] transition-colors">Glossary (plain English)</Link></li>
               </ul>
             </div>
             <div>
@@ -258,6 +271,7 @@ export function LandingPage() {
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -746,6 +760,7 @@ export function CommandCenter() {
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/performance">Observatory</Link>
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/architecture">Architecture</Link>
               <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/privacy/U-00001">Privacy</Link>
+              <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/glossary">Glossary</Link>
             </nav>
 
             <div className="flex items-center gap-2.5">
@@ -1737,7 +1752,7 @@ export function Investigation() {
             <Link className="font-nav-link text-[#555951] hover:text-[#FF5B35] transition-colors" to="/">← Command Center</Link>
             <div className="flex items-center gap-2">
               <Src s={s.source} />
-              <Badge level={s.risk_level} />
+              <Tip label={<Badge level={s.risk_level} />} text={LEVEL_MEANINGS[s.risk_level] ?? s.risk_level} />
             </div>
           </div>
 
@@ -1747,10 +1762,21 @@ export function Investigation() {
               <h1 className="font-title-strong text-2xl text-[#171916] font-mono">{t.transaction_id}</h1>
             </div>
             <div className="text-right">
-              <div className="font-mono text-xs text-[#7F837B] uppercase">Calibrated Risk Score</div>
+              <div className="font-mono text-xs text-[#7F837B] uppercase">
+                <Tip label="Calibrated Risk Score ⓘ" text={SCORE_MEANING} />
+              </div>
               <div className={`font-mono text-3xl font-bold ${s.risk_score >= 0.6 ? "text-[#C53030]" : "text-[#1B5E20]"}`}>
                 {s.risk_score.toFixed(3)}
               </div>
+            </div>
+          </div>
+
+          {/* Plain-English verdict: why this decision, in one line */}
+          <div className="rounded-[11px] p-4 border bg-white border-[#D8D4CA] flex items-start gap-3">
+            <span className="text-xl">{s.risk_score >= 0.6 ? "🔍" : "✅"}</span>
+            <div>
+              <div className="font-mono text-[10px] text-[#7F837B] uppercase mb-1">In plain English</div>
+              <div className="text-sm text-[#171916]">{whyFlagged(s)}</div>
             </div>
           </div>
 
@@ -1790,18 +1816,29 @@ export function Investigation() {
               <div className="font-title-strong text-sm text-[#171916] mb-3">5-Signal Risk Fusion</div>
               <div className="space-y-2 text-xs font-mono">
                 {[
-                  ["Fused Decision", s.risk_score.toFixed(3)],
-                  ["XGBoost Score", s.xgb_score != null ? s.xgb_score.toFixed(3) : "NOT AVAILABLE"],
-                  ["Isolation Forest", s.anomaly_score.toFixed(3)],
-                  ["Behavioral Drift", s.behavioral_score.toFixed(3)],
-                  ["Graph Cluster Score", s.graph_score != null ? s.graph_score.toFixed(3) : "NOT AVAILABLE"],
-                  ["Active Rules", s.rules.join(", ") || "None"],
-                ].map(([k, v]) => (
+                  ["Fused Decision", s.risk_score.toFixed(3), "All 5 signals blended into the final score."],
+                  ["XGBoost Score", s.xgb_score != null ? s.xgb_score.toFixed(3) : "NOT AVAILABLE", "ML model verdict from past fraud patterns."],
+                  ["Isolation Forest", s.anomaly_score.toFixed(3), "How strange this looks vs normal payments."],
+                  ["Behavioral Drift", s.behavioral_score.toFixed(3), "How far this is from the user's own habits."],
+                  ["Graph Cluster Score", s.graph_score != null ? s.graph_score.toFixed(3) : "NOT AVAILABLE", "Whether the device links to known fraud rings."],
+                ].map(([k, v, tip]) => (
                   <div key={k} className="flex justify-between border-b border-[#E7E4DB] py-1.5">
-                    <span className="text-[#7F837B]">{k}</span>
+                    <span className="text-[#7F837B]"><Tip label={`${k} ⓘ`} text={tip} /></span>
                     <span className="text-[#171916] font-semibold">{String(v)}</span>
                   </div>
                 ))}
+                <div className="flex justify-between border-b border-[#E7E4DB] py-1.5 gap-3">
+                  <span className="text-[#7F837B] shrink-0"><Tip label="Active Rules ⓘ" text="Tripwires that fired. Hover any chip for what it means." /></span>
+                  <span className="flex flex-wrap gap-1 justify-end">
+                    {s.rules.length === 0 ? (
+                      <span className="text-[#171916] font-semibold">None</span>
+                    ) : (
+                      s.rules.map((r: string) => (
+                        <Tip key={r} label={<span className="mono text-[10px] px-2 py-0.5 rounded-full border border-[#FF5B35]/40 bg-[#FF5B35]/10 text-[#A23C27] font-semibold">{r}</span>} text={ruleMeaning(r)} />
+                      ))
+                    )}
+                  </span>
+                </div>
                 <div className="pt-3 border-t border-[#E7E4DB]">
                   <div className="font-mono text-[10px] text-[#7F837B] uppercase">Engine Action</div>
                   <div className={`mt-1 font-mono text-xs font-bold px-2.5 py-1 rounded-[7px] border inline-block ${
@@ -1838,7 +1875,7 @@ export function Investigation() {
           {/* SHAP Waterfall Attribution */}
           <Card>
             <div id="shap" className="font-title-strong text-sm text-[#171916] mb-4 flex items-center justify-between">
-              <span>SHAP Feature Attribution Waterfall</span>
+              <span><Tip label="SHAP Feature Attribution Waterfall ⓘ" text="Each bar = how much that factor pushed the score toward fraud (orange) or safety (green). Longer bar = bigger influence." /></span>
               <span className="font-mono text-[10px] text-[#7F837B] uppercase">Grounded Mathematical Weights</span>
             </div>
             {s.signals.length === 0 ? (
@@ -1847,7 +1884,7 @@ export function Investigation() {
               <div className="space-y-2.5">
                 {s.signals.slice().sort((a: any, b: any) => Math.abs(b.contribution) - Math.abs(a.contribution)).map((sig: any) => (
                   <div key={sig.name} className="flex items-center gap-3 font-mono text-xs">
-                    <span className="w-40 text-[#555951] truncate">{sig.name}</span>
+                    <span className="w-40 text-[#555951] truncate"><Tip label={sig.name} text={signalMeaning(sig.name)} /></span>
                     <div className="flex-1 h-4 bg-[#E7E4DB] rounded-full overflow-hidden flex">
                       <div
                         className="h-full flex items-center justify-end pr-1 text-[9px] text-white font-bold"
@@ -2143,6 +2180,46 @@ export function Privacy() {
             </div>
             <div className="mt-4 font-mono text-[11px] text-[#7F837B]">
               Method: {d?.method ?? "Prototype Salted SHA-256 Pseudonymization"}
+            </div>
+          </Card>
+        </main>
+      </div>
+
+      <FinShieldFooter />
+    </div>
+  );
+}
+
+export function Glossary() {
+  return (
+    <div className="min-h-screen bg-[#F2EFE7] text-[#171916] flex flex-col justify-between">
+      <div>
+        <NavHeader />
+
+        <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+          <div>
+            <span className="badge-pill mb-2 inline-block">No jargon, promise</span>
+            <h1 className="font-title-strong text-2xl text-[#171916]">Glossary — every term in plain English</h1>
+            <p className="text-sm text-[#555951] mt-1">The same one-line meanings appear when you hover any dotted term across the app.</p>
+          </div>
+
+          <Card>
+            <div className="space-y-2">
+              {GLOSSARY.map((g) => (
+                <div key={g.term} className="border-b border-[#E7E4DB] py-2.5 last:border-0">
+                  <div className="font-mono text-xs font-bold text-[#171916]">{g.term}</div>
+                  <div className="text-sm text-[#555951]">{g.meaning}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card>
+            <div className="font-title-strong text-sm text-[#171916] mb-2">Every tripwire, decoded</div>
+            <div className="flex flex-wrap gap-1.5">
+              {Object.entries(RULE_MEANINGS).map(([code, meaning]) => (
+                <Tip key={code} label={<span className="mono text-[10px] px-2 py-0.5 rounded-full border border-[#FF5B35]/40 bg-[#FF5B35]/10 text-[#A23C27] font-semibold">{code}</span>} text={meaning} />
+              ))}
             </div>
           </Card>
         </main>

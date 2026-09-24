@@ -319,6 +319,20 @@ input:focus, select:focus {
   outline: none;
 }
 
+/* Plain-language tooltip (hover the dotted term) */
+.tip { position: relative; display: inline-flex; align-items: center; gap: 4px; cursor: help; }
+.tip-dots { border-bottom: 1px dotted #7F837B; }
+.tip-box {
+  visibility: hidden; opacity: 0; transition: opacity 0.12s ease;
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: 240px; white-space: normal;
+  background: #171916; color: #F2EFE7; font-size: 11px; line-height: 1.5;
+  padding: 8px 10px; border-radius: 8px; z-index: 50; pointer-events: none;
+  font-family: 'Inter', sans-serif; font-weight: 400; letter-spacing: 0; text-transform: none;
+  box-shadow: 0 10px 25px rgba(23, 25, 22, 0.3);
+}
+.tip:hover .tip-box, .tip:focus-within .tip-box { visibility: visible; opacity: 1; }
+
 /* Footer full-bleed block */
 .tellnova-footer {
   background-color: #171916;
