@@ -288,6 +288,8 @@ def test_train_logreg_smoke(tmp_path: Path):
         "FINSHEILD_PROCESSED_DIR": str(tmp_path / "processed"),
         "FINSHEILD_MODELS_DIR": str(tmp_path / "models"),
         "FINSHEILD_RESULTS_DIR": str(tmp_path / "results"),
+        "FINSHEILD_FIGURES_DIR": str(tmp_path / "figures"),
+        "FINSHEILD_REPORTS_DIR": str(tmp_path / "reports"),
     }
     cmd = [sys.executable, "-m", "finsheild.train", "--model", "logreg"]
     subprocess.check_call(cmd, env={**env, **__import__("os").environ}, cwd=str(Path.cwd()))
@@ -324,6 +326,8 @@ def test_train_xgboost_smoke(tmp_path: Path):
         "FINSHEILD_PROCESSED_DIR": str(tmp_path / "processed"),
         "FINSHEILD_MODELS_DIR": str(tmp_path / "models"),
         "FINSHEILD_RESULTS_DIR": str(tmp_path / "results"),
+        "FINSHEILD_FIGURES_DIR": str(tmp_path / "figures"),
+        "FINSHEILD_REPORTS_DIR": str(tmp_path / "reports"),
     }
     cmd = [
         sys.executable, "-m", "finsheild.train",

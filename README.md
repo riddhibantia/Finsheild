@@ -5,7 +5,7 @@
 **Hybrid, Multi-Signal Fraud Detection Engine for Digital Payments**
 
 ![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-208%20passing-success)
+![Tests](https://img.shields.io/badge/tests-215%20passing-success)
 ![XGBoost](https://img.shields.io/badge/XGBoost-enabled-orange)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-enabled-blue)
 ![NetworkX](https://img.shields.io/badge/NetworkX-enabled-lightgrey)
@@ -24,7 +24,7 @@ The signals are aggregated via a **Risk Fusion Engine**, which calculates a weig
 > [!IMPORTANT]
 > The LLM copilot acts purely as an observability and explainability layer. It provides context to fraud analysts but **never** overrides the deterministic or ML-driven risk scores.
 
-For the graphical user interface and frontend application, please visit the companion repository: **[Finsheild-App](https://github.com/riddhibantia/Finsheild-App)**.
+The full-stack app (FastAPI backend + React/Vite frontend) lives in this repo under `backend/` and `frontend/` — see [Full-Stack App](#full-stack-app) below. Full app guide: `docs/app.md`.
 
 ---
 
@@ -146,6 +146,9 @@ The Fusion Engine combines signals using the following weights:
 
 ```text
 Finsheild/
+├── backend/              # FastAPI app (13 endpoints, auto-discovers ML core)
+├── frontend/             # React 19 + Vite + Tailwind workstation
+├── start_app.sh          # one-click launcher (backend :8000 + frontend :5173)
 ├── src/finsheild/
 │   ├── data/           # loader, preprocessing, stratified splits
 │   ├── model.py        # model registry: logreg, xgboost (500 trees), lightgbm
@@ -167,7 +170,7 @@ Finsheild/
 │   └── export/         # export_all pipeline artifacts
 ├── models/             # trained model weights (XGBoost, scaler, thresholds)
 ├── evaluation/         # reports (JSON/MD) and figures (PR/ROC curves, confusion matrices)
-├── tests/              # 208 unit/integration tests
+├── tests/ + backend/tests/  # 215 unit/integration/API tests
 ├── scripts/            # dataset download, synthetic generation, experiment runners
 ├── notebooks/colab/    # Colab notebooks for GPU training
 ├── config/             # dataset.yaml configuration
@@ -199,9 +202,29 @@ python scripts/download_dataset.py
 # 2. Train the XGBoost Model
 python -m finsheild.train --model xgboost
 
-# 3. Run the test suite (208 tests)
-pytest tests/ -q
+# 3. Run the test suite (215 tests: ML core + backend API)
+pytest -q
 ```
+
+## Full-Stack App
+
+`backend/` (FastAPI, 11 endpoints) + `frontend/` (React 19 + Vite + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
+
+```bash
+# One-click launcher (backend :8000 + frontend :5173)
+bash start_app.sh
+
+# Backend only
+PYTHONPATH=. python -m uvicorn backend.main:app --reload
+
+# Frontend only
+cd frontend; npm install; npm run dev
+
+# Backend API tests
+pytest backend/tests/ -q
+```
+
+Full guide (screens, endpoints, demo walkthrough): `docs/app.md`.
 
 ---
 

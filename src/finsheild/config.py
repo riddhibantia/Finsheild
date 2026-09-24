@@ -35,6 +35,8 @@ class ProjectPaths:
       FINSHEILD_MODELS_DIR    — final model artifacts (default: <root>/models)
       FINSHEILD_CHECKPOINTS_DIR — training checkpoints (default: <root>/checkpoints)
       FINSHEILD_RESULTS_DIR   — experiment results (default: <root>/results)
+      FINSHEILD_FIGURES_DIR   — eval figures (default: <root>/evaluation/figures; tests MUST override to tmp)
+      FINSHEILD_REPORTS_DIR   — eval reports (default: <root>/evaluation/reports; tests MUST override to tmp)
       FINSHEILD_DRIVE_ROOT    — Colab Drive mount root (default: /content/drive/MyDrive/Finsheild)
     """
 
@@ -45,8 +47,8 @@ class ProjectPaths:
     checkpoints_dir: Path = field(default_factory=lambda: _env_path("FINSHEILD_CHECKPOINTS_DIR", REPO_ROOT / "checkpoints"))
     results_dir: Path = field(default_factory=lambda: _env_path("FINSHEILD_RESULTS_DIR", REPO_ROOT / "results"))
     drive_root: Path = field(default_factory=lambda: _env_path("FINSHEILD_DRIVE_ROOT", Path("/content/drive/MyDrive/Finsheild")))
-    figures_dir: Path = field(default_factory=lambda: REPO_ROOT / "evaluation" / "figures")
-    reports_dir: Path = field(default_factory=lambda: REPO_ROOT / "evaluation" / "reports")
+    figures_dir: Path = field(default_factory=lambda: _env_path("FINSHEILD_FIGURES_DIR", REPO_ROOT / "evaluation" / "figures"))
+    reports_dir: Path = field(default_factory=lambda: _env_path("FINSHEILD_REPORTS_DIR", REPO_ROOT / "evaluation" / "reports"))
 
     def experiment_dir(self, name: str) -> Path:
         return self.results_dir / name

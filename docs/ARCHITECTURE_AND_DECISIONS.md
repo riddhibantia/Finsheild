@@ -39,9 +39,9 @@ FinShield is a **multi-signal, hybrid fraud intelligence and forensic platform**
 
 ## 2. End-to-End System Architecture
 
-FinShield is intentionally architected as two cleanly decoupled repositories:
-1. **`Finsheild` (ML Core Research & Training Engine)**: Houses dataset pipelines, feature extraction, model registries, training loops, SHAP explainers, synthetic stress suites, and QLoRA fine-tuning pipelines.
-2. **`Finsheild-App` (FastAPI Backend + React Frontend)**: Serves as the real-time operational Command Center and Forensic Investigation Workstation.
+FinShield lives in one repo with two cleanly decoupled layers:
+1. **ML Core Research & Training Engine** (`src/finsheild/`): dataset pipelines, feature extraction, model registries, training loops, SHAP explainers, synthetic stress suites, and QLoRA fine-tuning pipelines.
+2. **App layer** (`backend/` FastAPI + `frontend/` React): the real-time operational Command Center and Forensic Investigation Workstation.
 
 ```mermaid
 flowchart TD
@@ -353,46 +353,38 @@ Evaluators can verify the entire platform end-to-end using this structured 10-st
 ## 12. Repository Layout, Tooling & Deployment Matrix
 
 ```
-Finsheild-Ecosystem/
-├── Finsheild/                         # ML Core Research & Training Engine
-│   ├── src/finsheild/
-│   │   ├── data/                      # Kaggle loader & stratified splits
-│   │   ├── model.py                   # XGBoost, LightGBM, LogReg registries
-│   │   ├── train.py                   # Training loops with early stopping
-│   │   ├── inference.py               # Low-latency inference pipeline
-│   │   ├── features/                  # 36 leakage-safe feature definitions
-│   │   ├── behavioral/                # Online rolling user profiles
-│   │   ├── anomaly/                   # IsolationForest (legit-only fitting)
-│   │   ├── rules/                     # 8 production deterministic rules
-│   │   ├── graph/                     # NetworkX multi-hop entity resolution
-│   │   ├── risk_fusion/               # 5-signal linear convex combination
-│   │   ├── explain/                   # SHAP TreeExplainer
-│   │   └── finetune/                  # QLoRA Qwen2.5-0.5B instruction tuning
-│   ├── models/                        # Serialized weights (XGBoost, Scaler)
-│   ├── evaluation/reports/            # Benchmark JSON & Markdown reports
-│   └── tests/                         # 208 passing unit & integration tests
-│
-└── Finsheild-App/                     # Presentation & Workstation Engine
-    ├── backend/
-    │   ├── main.py                    # FastAPI app (13 REST endpoints + webhooks)
-    │   ├── schemas.py                 # Pydantic data contracts
-    │   ├── metrics_loader.py          # Real ULB benchmark ingestion
-    │   ├── services/store.py          # In-memory store & graph generator
-    │   └── adapters/
-    │       ├── real_adapter.py        # Connects to live Finsheild ML Core
-    │       └── mock_adapter.py        # Transparent fallback with honesty labels
-    ├── frontend/
-    │   ├── src/pages.tsx              # Command Center, Investigation, Performance, Graph
-    │   ├── src/api.ts                 # Typed API client
-    │   └── src/index.css              # Editorial tokens & typography
-    └── start.sh                       # One-click dual server launcher
+Finsheild/                            # Single repo: ML Core + full-stack app
+├── src/finsheild/
+│   ├── data/                          # Kaggle loader & stratified splits
+│   ├── model.py                       # XGBoost, LightGBM, LogReg registries
+│   ├── train.py                       # Training loops with early stopping
+│   ├── inference.py                   # Low-latency inference pipeline
+│   ├── features/                      # 36 leakage-safe feature definitions
+│   ├── behavioral/                    # Online rolling user profiles
+│   ├── anomaly/                       # IsolationForest (legit-only fitting)
+│   ├── rules/                         # 8 production deterministic rules
+│   ├── graph/                         # NetworkX multi-hop entity resolution
+│   ├── risk_fusion/                   # 5-signal linear convex combination
+│   ├── explain/                       # SHAP TreeExplainer
+│   └── finetune/                      # QLoRA Qwen2.5-0.5B instruction tuning
+├── backend/                           # FastAPI presentation & workstation API
+│   ├── main.py                        # 13 REST endpoints incl. Cashfree webhooks
+│   ├── schemas.py                     # Pydantic data contracts
+│   ├── metrics_loader.py              # Real ULB benchmark ingestion
+│   ├── services/store.py              # In-memory store & graph generator
+│   └── adapters/                      # Real (live ML core) + mock fallback
+├── frontend/                          # React 19 + Vite + Tailwind workstation
+│   ├── src/pages.tsx                  # Command Center, Investigation, Performance, Graph
+│   ├── src/api.ts                     # Typed API client
+│   └── src/index.css                  # Editorial tokens & typography
+├── models/                            # Serialized weights (XGBoost, Scaler)
+├── evaluation/reports/                # Benchmark JSON & Markdown reports
+├── tests/ + backend/tests/            # 215 passing unit, integration & API tests
+└── start_app.sh                       # One-click dual server launcher
 ```
 
 ### Remote Deployments & Public Access Links
-- **Hugging Face Space**: [https://huggingface.co/spaces/riddhibantia/Finsheild](https://huggingface.co/spaces/riddhibantia/Finsheild)
-- **Direct Static Application URL**: [https://riddhibantia-finsheild.static.hf.space](https://riddhibantia-finsheild.static.hf.space)
-- **GitHub Application Repo**: [https://github.com/riddhibantia/Finsheild-App](https://github.com/riddhibantia/Finsheild-App)
-- **GitHub ML Core Engine Repo**: [https://github.com/riddhibantia/Finsheild](https://github.com/riddhibantia/Finsheild)
+- **GitHub (single repo, ML core + app)**: [https://github.com/riddhibantia/Finsheild](https://github.com/riddhibantia/Finsheild)
 - **Live Cashfree Webhook Ingress URL**: `<YOUR-CLOUDFLARE-URL>/api/webhooks/cashfree` (configure per deployment; do not commit live tunnel URLs)
 
 ---
