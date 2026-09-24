@@ -75,7 +75,7 @@ def test_cashfree_webhook_flow():
                 "payment_amount": 75.0,
                 "payment_currency": "INR",
                 "payment_time": "2026-09-05T04:45:00Z",
-                "payment_method": {"upi": {"upi_id": "payer@okhdfcbank"}},
+                "payment_method": {"upi": {"upi_id": "riddhi@okhdfcbank"}},
                 "payment_group": "upi"
             },
             "customer_details": {"customer_phone": "+919876543210"}

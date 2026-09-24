@@ -23,7 +23,7 @@ const SAMPLE_CF_OUTPUT = {
   record: {
     transaction: {
       transaction_id: "CF-CF_PAY_DEMO_1",
-      user_id: "payer@okhdfcbank",
+      user_id: "riddhi@okhdfcbank",
       amount: 75.0,
       merchant: "Cashfree Payment Rail",
       channel: "UPI",
@@ -658,7 +658,7 @@ export function CommandCenter() {
 
   // Cashfree Webhook Ingestion State
   const [cfAmount, setCfAmount] = useState<number>(75);
-  const [cfUpiId, setCfUpiId] = useState<string>("payer@okhdfcbank");
+  const [cfUpiId, setCfUpiId] = useState<string>("riddhi@okhdfcbank");
   const [cfStatus] = useState<string>("SUCCESS");
   const [cfProcessing, setCfProcessing] = useState<boolean>(false);
   const [cfResult, setCfResult] = useState<any>(null);
@@ -927,7 +927,7 @@ export function CommandCenter() {
                       <span className="text-[#A7AAA3] font-semibold text-[11px]">Instant Payload Ingestion</span>
                       <div className="flex gap-1">
                         <button
-                          onClick={() => handleCashfreeTest(75, "user@okhdfcbank")}
+                          onClick={() => handleCashfreeTest(75, "riddhi@okhdfcbank")}
                           className="text-[9px] px-2 py-0.5 rounded bg-[#2E7D32]/20 border border-[#2E7D32]/40 text-[#4CAF50] hover:bg-[#2E7D32]/30"
                         >
                           ₹75 Safe
@@ -1028,7 +1028,7 @@ export function CommandCenter() {
                     <pre className="block bg-[#171916] p-2.5 rounded text-[10px] leading-relaxed text-[#26A69A] border border-[#2B2D2A] overflow-x-auto whitespace-pre-wrap break-all select-all">
                       {`curl -X POST http://127.0.0.1:8000/api/webhooks/cashfree \\
   -H "Content-Type: application/json" \\
-  -d '{"data":{"order":{"order_id":"ORD_DEMO_1","order_amount":75.0},"payment":{"cf_payment_id":"CF_PAY_DEMO_1","payment_status":"SUCCESS","payment_amount":75.0,"payment_method":{"upi":{"upi_id":"payer@okhdfcbank"}},"payment_group":"upi"},"customer_details":{"customer_phone":"+919876543210"}},"type":"PAYMENT_SUCCESS_WEBHOOK"}'`}
+  -d '{"data":{"order":{"order_id":"ORD_DEMO_1","order_amount":75.0},"payment":{"cf_payment_id":"CF_PAY_DEMO_1","payment_status":"SUCCESS","payment_amount":75.0,"payment_method":{"upi":{"upi_id":"riddhi@okhdfcbank"}},"payment_group":"upi"},"customer_details":{"customer_phone":"+919876543210"}},"type":"PAYMENT_SUCCESS_WEBHOOK"}'`}
                     </pre>
                     <p className="text-[10px] text-[#7F837B]">
                       • Change <span className="text-[#F2EFE7]">order_amount</span> to 125000 to watch it flip to CRITICAL.

@@ -222,7 +222,7 @@ async function req(path: string, init?: RequestInit) {
       const payment = data.payment || {};
       const order = data.order || {};
       const amount = Number(payment.payment_amount || order.order_amount || body.amount || 75.0);
-      const upi_id = payment.payment_method?.upi?.upi_id || body.upi_id || "payer@okhdfcbank";
+      const upi_id = payment.payment_method?.upi?.upi_id || body.upi_id || "riddhi@okhdfcbank";
       const cf_id = payment.cf_payment_id || `CF-${Date.now()}`;
       
       const txn = {
@@ -274,7 +274,7 @@ export const api = {
   cashfreeWebhook: (payload: object) =>
     req("/api/webhooks/cashfree", { method: "POST", body: JSON.stringify(payload) }),
   cashfreeSimulate: (params: { amount: number; status?: string; upi_id?: string }) =>
-    req(`/api/webhooks/cashfree/simulate?amount=${params.amount}&status=${params.status || "SUCCESS"}&upi_id=${encodeURIComponent(params.upi_id || "user@okhdfcbank")}`, { method: "POST" }),
+    req(`/api/webhooks/cashfree/simulate?amount=${params.amount}&status=${params.status || "SUCCESS"}&upi_id=${encodeURIComponent(params.upi_id || "riddhi@okhdfcbank")}`, { method: "POST" }),
   identity: (uid: string) => req(`/api/identity/${uid}`),
   reset: () => req("/api/demo/reset", { method: "POST" }),
 };

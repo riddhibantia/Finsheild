@@ -328,7 +328,7 @@ async def cashfree_webhook(payload: dict):
 
 
 @app.post("/api/webhooks/cashfree/simulate")
-def cashfree_simulate(amount: float = 75.0, status: str = "SUCCESS", upi_id: str = "user@okhdfcbank"):
+def cashfree_simulate(amount: float = 75.0, status: str = "SUCCESS", upi_id: str = "riddhi@okhdfcbank"):
     """Simulate a Cashfree PG webhook payload for testing."""
     from datetime import datetime, timezone
     sample_payload = {
@@ -356,7 +356,7 @@ def cashfree_simulate(amount: float = 75.0, status: str = "SUCCESS", upi_id: str
             },
             "customer_details": {
                 "customer_id": "cust_demo_882",
-                "customer_name": "Test Payer",
+                "customer_name": "Riddhi Bantia",
                 "customer_email": "payer@example.com",
                 "customer_phone": "+919876543210",
             },
