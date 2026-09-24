@@ -4,6 +4,8 @@
 
 **Real-Time, Multi-Signal Fraud Defense for Digital Payments — ML Engine + API + Dashboard in One Repo**
 
+### ▶ Live Demo: https://finshield-demo.vercel.app
+
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Tests](https://img.shields.io/badge/tests-215%20passing-success)
 ![XGBoost ROC-AUC 0.97](https://img.shields.io/badge/XGBoost-ROC--AUC%200.97-orange)
