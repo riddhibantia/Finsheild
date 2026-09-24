@@ -36,6 +36,37 @@ bash start_app.sh
 
 Open **http://127.0.0.1:5173** → Command Center → inject a **Fraud Ring** → click it for the forensic view (risk radar, SHAP bars, copilot, entity graph). Or fire a gateway payment yourself from the Cashfree studio tab (₹75 scores LOW, ₹1,00,000 scores CRITICAL). API docs at **http://127.0.0.1:8000/docs**. Full guide: `docs/app.md`.
 
+## How the Full Stack Works Together
+
+```mermaid
+graph TD
+    subgraph Frontend [Frontend - Next.js App Router]
+        UI[Workstation UI]
+        Routes[/ • /command-center • /investigate • /performance • /architecture • /privacy • /glossary/]
+        APIClient[Typed API Client + Offline Simulation]
+        UI --> Routes
+        Routes --> APIClient
+    end
+
+    subgraph Backend [Backend - FastAPI]
+        API[13 REST Endpoints + Cashfree Webhooks]
+        Services[Services / Store]
+        Adapters[ML Adapters]
+        APIClient -- REST --> API
+        API --> Services
+        Services --> Adapters
+    end
+
+    subgraph Core [ML Core - Same Repo]
+        Real[Real Adapter]
+        Mock[Mock Adapter]
+        MLCore[(src/finsheild + models/)]
+        Adapters --> Real
+        Adapters --> Mock
+        Real --> MLCore
+    end
+```
+
 ---
 
 ## Architecture & Data Flow
@@ -218,38 +249,7 @@ pytest -q
 
 ## Full-Stack App
 
-`backend/` (FastAPI, 13 endpoints) + `frontend/` (Next.js 16 + React 19 + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
-
-### How the App Fits Together
-
-```mermaid
-graph TD
-    subgraph Frontend [Frontend - Next.js App Router]
-        UI[Workstation UI]
-        Routes[/ • /command-center • /investigate • /performance • /architecture • /privacy • /glossary/]
-        APIClient[Typed API Client + Offline Simulation]
-        UI --> Routes
-        Routes --> APIClient
-    end
-
-    subgraph Backend [Backend - FastAPI]
-        API[13 REST Endpoints + Cashfree Webhooks]
-        Services[Services / Store]
-        Adapters[ML Adapters]
-        APIClient -- REST --> API
-        API --> Services
-        Services --> Adapters
-    end
-
-    subgraph Core [ML Core - Same Repo]
-        Real[Real Adapter]
-        Mock[Mock Adapter]
-        MLCore[(src/finsheild + models/)]
-        Adapters --> Real
-        Adapters --> Mock
-        Real --> MLCore
-    end
-```
+`backend/` (FastAPI — 13 endpoints: health, metrics, scoring, generation, investigation, graph, identity, Cashfree webhooks, demo reset) + `frontend/` (Next.js 16 + React 19 + Tailwind) sit in this repo. The backend auto-discovers the ML core in the repo root (override with `FINSHEILD_CORE_PATH`); without model artifacts it serves honest `DEMO_FALLBACK` labels.
 
 ```bash
 # One-click launcher (backend :8000 + frontend :5173)
