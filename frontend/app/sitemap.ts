@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://shieldfin-finsheild.vercel.app";
+const SITE_URL = "https://finshield-demo.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
