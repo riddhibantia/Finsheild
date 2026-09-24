@@ -27,10 +27,10 @@ It provides fraud analysts with a comprehensive toolkit: instant transaction sco
 
 ```mermaid
 graph TD
-    subgraph Frontend [Frontend - Next.js/React]
-        UI[React UI]
-        Router[React Router]
-        APIClient[Typed API Client]
+    subgraph Frontend [Frontend - Next.js App Router]
+        UI[Workstation UI]
+        Router[File Routes: /command-center, /investigate, /performance, /architecture, /privacy, /glossary]
+        APIClient[Typed API Client + Offline Simulation]
         UI --> Router
         Router --> APIClient
     end
