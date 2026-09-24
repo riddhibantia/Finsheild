@@ -27,7 +27,7 @@ Three layers, one repo: `src/finsheild/` (research + training engine), `backend/
 
 ## Run the Demo (2 Minutes)
 
-**Live hosted demo (no install):** https://finshield-app.vercel.app — runs fully offline on the built-in simulation.
+**Live hosted demo (no install):** https://shieldfin-finsheild.vercel.app — runs fully offline on the built-in simulation.
 
 Or run the full stack locally:
 

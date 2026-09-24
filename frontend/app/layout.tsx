@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const SITE_URL = "https://finshield-app.vercel.app";
+const SITE_URL = "https://shieldfin-finsheild.vercel.app";
 const SITE_NAME = "FinShield — Multi-Signal Fraud Defense Platform";
 const SITE_DESC =
   "Real-time fraud defense for digital payments: XGBoost + 5-signal risk fusion, SHAP explainability, entity graph forensics, and an AI investigation copilot. Live interactive demo.";
